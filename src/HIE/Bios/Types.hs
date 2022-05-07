@@ -11,6 +11,7 @@
 module HIE.Bios.Types where
 
 import           System.Exit
+import           System.Process                 ( CreateProcess )
 import qualified Colog.Core as L
 import           Control.Exception              ( Exception )
 import           Control.Monad
@@ -56,12 +57,14 @@ data ActionName a
 
 data Log = 
   LogAny String
+  | LogRunningProcess CreateProcess
   | LogProcessOutput String
   deriving Show
 
 instance Pretty Log where
   pretty (LogAny s) = pretty s
-  pretty (ProcessOutput s) = pretty s
+  pretty (LogRunningProcess s) = viaShow s
+  pretty (LogProcessOutput s) = pretty s
 
 data CradleAction a = CradleAction {
                         actionName    :: ActionName a

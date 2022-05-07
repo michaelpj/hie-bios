@@ -1018,6 +1018,7 @@ readProcessWithOutputs
   -> CreateProcess -- ^ Parameters for the process to be executed.
   -> IO (ExitCode, [String], [String], [(OutputName, Maybe [String])])
 readProcessWithOutputs outputNames l workDir cp = flip runContT return $ do
+  l <& LogRunningProcess cp
   old_env <- liftIO getCleanEnvironment
   output_files <- traverse (withOutput old_env) outputNames
 
@@ -1092,6 +1093,7 @@ readProcessWithCwd_ dir cmd args stdin = do
 -- a 'CradleLoadResult'. Provides better error messages than raw 'readCreateProcess'.
 readProcessWithCwd' :: CreateProcess -> String -> CradleLoadResultT IO String
 readProcessWithCwd' createdProcess stdin = do
+  l <& LogRunningProcess createdProcess
   mResult <- liftIO $ optional $ readCreateProcessWithExitCode createdProcess stdin
   let cmdString = prettyCmdSpec $ cmdspec createdProcess
   case mResult of
