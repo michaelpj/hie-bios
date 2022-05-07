@@ -54,11 +54,14 @@ data ActionName a
   | Other a
   deriving (Show, Eq, Ord, Functor)
 
-data Log = LogAny String
+data Log = 
+  LogAny String
+  | LogProcessOutput String
   deriving Show
 
 instance Pretty Log where
   pretty (LogAny s) = pretty s
+  pretty (ProcessOutput s) = pretty s
 
 data CradleAction a = CradleAction {
                         actionName    :: ActionName a
